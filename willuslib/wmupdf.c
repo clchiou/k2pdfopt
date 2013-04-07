@@ -1026,11 +1026,11 @@ printf("key[%d] = ??\n",i);
         i=-1;
         len=pdf_dict_len(srcpageobj);
         }
-	pdf_dict_puts(srcpageobj,"Type",fz_new_name(ctx,"XObject"));
-	pdf_dict_puts(srcpageobj,"Subtype",fz_new_name(ctx,"Form"));
+	pdf_dict_puts(srcpageobj,"Type",pdf_new_name(ctx,"XObject"));
+	pdf_dict_puts(srcpageobj,"Subtype",pdf_new_name(ctx,"Form"));
 	pdf_dict_puts(srcpageobj,"FormType",pdf_new_int(ctx,1));
     if (compressed)
-        pdf_dict_puts(srcpageobj,"Filter",fz_new_name(ctx,"FlateDecode"));
+        pdf_dict_puts(srcpageobj,"Filter",pdf_new_name(ctx,"FlateDecode"));
  	pdf_dict_puts(srcpageobj,"Length",pdf_new_int(ctx,streamlen));
     array=pdf_new_array(ctx,4);
     for (i=0;i<4;i++)
@@ -1155,7 +1155,7 @@ static pdf_obj *start_new_destpage(fz_context *ctx,double width_pts,double heigh
     pdf_obj *mbox;
 
     pageobj=pdf_new_dict(ctx,2);
-	pdf_dict_puts(pageobj,"Type",fz_new_name(ctx,"Page"));
+	pdf_dict_puts(pageobj,"Type",pdf_new_name(ctx,"Page"));
     mbox=pdf_new_array(ctx,4);
     pdf_array_push(mbox,pdf_new_real(ctx,0.));
     pdf_array_push(mbox,pdf_new_real(ctx,0.));

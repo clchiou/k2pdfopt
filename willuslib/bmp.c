@@ -208,7 +208,8 @@ int bmp_write(WILLUSBITMAP *bmap,char *filename,FILE *out,int quality)
             }
         else
             {
-            fprintf(out,"pdffile_init(%s) failed.\n",filename);
+            if (out!=NULL)
+                fprintf(out,"pdffile_init(%s) failed.\n",filename);
             return(-10);
             }
         }
@@ -1173,8 +1174,9 @@ void bmp8_palette_info(WILLUSBITMAP *bmap,FILE *out)
     for (i=0;i<pixcount;i++)
         counts[bmap->data[i]]++;
     for (i=0;i<256;i++)
-        fprintf(out,"Index %3ld (%3d,%3d,%3d):  %6d\n",
-            i,bmap->red[i],bmap->blue[i],bmap->green[i],counts[i]);
+        if (out!=NULL)
+            fprintf(out,"Index %3ld (%3d,%3d,%3d):  %6d\n",
+                i,bmap->red[i],bmap->blue[i],bmap->green[i],counts[i]);
     }
 
 
@@ -1634,9 +1636,12 @@ int bmp_read(WILLUSBITMAP *bmap,char *filename,FILE *out)
         int fmt;
         fmt=bmp_jasper_read(NULL,filename,NULL);
         if (fmt<0)
+        {
 #endif
-        fprintf(out,"Warning:  file %s has no extension.  Treating as BMP file.\n",filename);
+        if (out!=NULL)
+            fprintf(out,"Warning:  file %s has no extension.  Treating as BMP file.\n",filename);
 #ifdef HAVE_JASPER_LIB
+        }
         else
             return(bmp_jasper_read(bmap,filename,out));
         }

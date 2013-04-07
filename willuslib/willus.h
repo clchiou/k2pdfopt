@@ -138,8 +138,10 @@ typedef double  real;
 #endif
 
 #undef NEEDSTRICMP
+#if 0
 #if (!defined(MSDOS) && !defined(DJEMX) && !defined(_MSC_VER) && !defined(CYGWIN32) && !defined(__DMC__) && !defined(__LCC__) && !defined(__WATCOMC__) && !defined(__BORLANDC__) && !defined(__MINGW32__) && !defined(__TINYC__))
 #define NEEDSTRICMP
+#endif
 #endif
 
 #if (!defined(WILLUS_X863264) && (defined(__i386__) || defined(i386) || defined(__amd64) || defined(__x86_64) || defined(__x86_64__) || defined(__amd64__) || defined(WIN32) || defined(MSDOS32)))
@@ -211,6 +213,7 @@ typedef double  real;
 #ifndef HAVE_MUPDF_LIB
 #define HAVE_MUPDF_LIB
 #endif
+#if 0
 #ifndef HAVE_GHOSTSCRIPT
 #define HAVE_GHOSTSCRIPT
 #endif
@@ -219,6 +222,7 @@ typedef double  real;
 #endif
 #ifndef HAVE_GOCR_LIB
 #define HAVE_GOCR_LIB
+#endif
 #endif
 #ifndef HAVE_LEPTONICA_LIB
 #define HAVE_LEPTONICA_LIB

@@ -310,7 +310,7 @@ static void pdffile_add_object(PDFFILE *pdf,PDFOBJECT *object);
 #ifdef HAVE_Z_LIB
 static int pdf_numpages_1(void *ptr,int bufsize);
 static int decodecheck(FILE *f,int np);
-static int getline(char *buf,int maxlen,FILE *f);
+static int _getline(char *buf,int maxlen,FILE *f);
 static int getbufline(char *buf,int maxlen,char *opbuf,int *i0,int bufsize);
 #endif
 static void insert_length(FILE *f,long pos,int len);
@@ -1028,7 +1028,7 @@ static int pdf_numpages_1(void *ptr,int bufsize)
     while (1)
         {
         if (bufsize==0)
-            gls=getline(buf,254,f);
+            gls=_getline(buf,254,f);
         else
             gls=getbufline(buf,254,opbuf,&i0,bufsize);
         for (i=0;kwords[i][0]!='\0';i++)
@@ -1120,7 +1120,7 @@ fwrite(outbuf,1,zstrm.total_out>2048 ? 2048:zstrm.total_out,stdout);
     }
 
 
-static int getline(char *buf,int maxlen,FILE *f)
+static int _getline(char *buf,int maxlen,FILE *f)
 
     {
     int i,c;
