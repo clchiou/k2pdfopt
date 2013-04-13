@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # Copyright (c) 2013 Che-Liang Chiou. All rights reserved.
 # Use of this source code is governed by the GNU General Public License
@@ -6,9 +6,9 @@
 # License, or (at your option) any later version.
 #
 
-source pkg_info
-source ../common.sh
+SRC_DIR=$(dirname $0)
 
-export CFLAGS="${CFLAGS} -I=/usr/include/glibc-compat"
-
-DefaultPackageInstall
+cat > Makefile <<EOF
+SRC_DIR := ${SRC_DIR}
+include ${SRC_DIR}/Makefile
+EOF

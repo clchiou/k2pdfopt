@@ -1,71 +1,44 @@
-SRCS=	k2pdfopt.c \
-	willuslib/strbuf.c \
-	willuslib/bmpmupdf.c \
-	willuslib/mem.c \
-	willuslib/point2d.c \
-	willuslib/string.c \
-	willuslib/ansi.c \
-	willuslib/linux.c \
-	willuslib/wzfile.c \
-	willuslib/wgs.c \
-	willuslib/render.c \
-	willuslib/gslpolyfit.c \
-	willuslib/token.c \
-	willuslib/wfile.c \
-	willuslib/array.c \
-	willuslib/pdfwrite.c \
-	willuslib/ocr.c \
-	willuslib/wmupdf.c \
-	willuslib/win.c \
-	willuslib/ocrtess.c \
-	willuslib/ocrjocr.c \
-	willuslib/math.c \
-	willuslib/filelist.c \
-	willuslib/fontdata.c \
-	willuslib/fontrender.c \
-	willuslib/bmpdjvu.c \
-	willuslib/bmp.c \
-	willuslib/wsys.c \
-	willuslib/willusversion.c \
-	k2pdfoptlib/k2version.c \
-	k2pdfoptlib/bmpregions.c \
-	k2pdfoptlib/k2ocr.c \
-	k2pdfoptlib/k2menu.c \
-	k2pdfoptlib/k2master.c \
-	k2pdfoptlib/k2usage.c \
-	k2pdfoptlib/k2parsecmd.c \
-	k2pdfoptlib/devprofile.c \
-	k2pdfoptlib/k2bmp.c \
-	k2pdfoptlib/k2publish.c \
-	k2pdfoptlib/pagelist.c \
-	k2pdfoptlib/breakinfo.c \
-	k2pdfoptlib/k2proc.c \
-	k2pdfoptlib/k2settings.c \
-	k2pdfoptlib/k2file.c \
-	k2pdfoptlib/k2sys.c \
-	k2pdfoptlib/userinput.c \
-	k2pdfoptlib/wrapbmp.c \
-	k2pdfoptlib/k2mem.c \
-	k2pdfoptlib/bmpregion.c \
-	k2pdfoptlib/k2mark.c \
-	nacl_libc.c
+# Copyright (c) 2013 Che-Liang Chiou. All rights reserved.
+# Use of this source code is governed by the GNU General Public License
+# as published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
 
-OBJS=$(subst .c,.o,$(SRCS))
+SRC_DIR ?= .
+OBJ_DIR ?= .
 
-CFLAGS += -w -fpermissive -O2 -Ik2pdfoptlib -Iwilluslib -Iinclude_mod
+SRCS = $(SRC_DIR)/k2pdfopt.c
+SRCS += $(wildcard $(SRC_DIR)/willuslib/*.c)
+SRCS += $(wildcard $(SRC_DIR)/k2pdfoptlib/*.c)
 
-LIBS :=	-ltesseract -llept -lfitz -lopenjpeg -ljbig2dec -lfreetype \
-	-ljpeg -lpng -lz $(LIBS)
+OBJS = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))
+OBJ_DIRS = $(OBJ_DIR) $(OBJ_DIR)/willuslib $(OBJ_DIR)/k2pdfoptlib
 
-all: k2pdfopt
+LIB_K2PDFOPT = $(OBJ_DIR)/libk2pdfopt.a
 
-.c.o:
-	$(CC) $(CFLAGS) -o $@ -c $<
+CFLAGS += -w -fpermissive -O2
+CFLAGS += -I$(SRC_DIR)/k2pdfoptlib
+CFLAGS += -I$(SRC_DIR)/willuslib
+CFLAGS += -I$(SRC_DIR)/include_mod
 
-k2pdfopt: $(OBJS)
-	$(CC) $(LDFLAGS) -o k2pdfopt $(OBJS) $(LIBS)
+all: $(LIB_K2PDFOPT)
+
+# Install library to $PKG_CONFIG_LIBDIR...
+install: $(LIB_K2PDFOPT)
+	[ -n "$${PKG_CONFIG_LIBDIR}" ] || exit 1
+	mkdir -p $${PKG_CONFIG_LIBDIR}
+	cp $< $${PKG_CONFIG_LIBDIR}
 
 clean:
-	rm -f k2pdfopt $(OBJS)
+	rm -f $(LIB_K2PDFOPT) $(OBJS)
 
-.PHONY: all clean
+.PHONY: all install clean
+
+$(LIB_K2PDFOPT): $(OBJS) | $(OBJ_DIRS)
+	$(AR) cru $@ $(OBJS)
+	-$(RANLIB) $@
+
+$(OBJS): $(OBJ_DIR)/%.o : $(SRC_DIR)/%.c | $(OBJ_DIRS)
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+$(OBJ_DIRS):
+	mkdir -p $@
