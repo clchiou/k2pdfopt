@@ -27,7 +27,7 @@
 
 #include <k2pdfopt.h>
 
-int main(int argc,char *argv[])
+int k2pdfopt_main(int argc,const char *argv[])
 
     {
     int i,filecount;
