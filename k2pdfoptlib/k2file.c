@@ -20,6 +20,7 @@
 */
 
 #include "k2pdfopt.h"
+#include "../k2pdfopt_api.h"
 
 static void   k2pdfopt_proc_arg(K2PDFOPT_SETTINGS *k2settings,char *arg);
 static double k2pdfopt_proc_one(K2PDFOPT_SETTINGS *k2settings,char *filename,double rot_deg);
@@ -357,6 +358,7 @@ static double k2pdfopt_proc_one(K2PDFOPT_SETTINGS *k2settings,char *filename,dou
         }
     if (!second_time_through)
         {
+        k2pdfopt_progress_read_pages(pagecount);
         aprintf("Reading ");
         if (pagecount>0)
            {
@@ -506,6 +508,7 @@ static double k2pdfopt_proc_one(K2PDFOPT_SETTINGS *k2settings,char *filename,dou
         if (k2settings->show_marked_source)
             publish_marked_page(mpdf,k2settings->dst_color ? marked : src,k2settings->src_dpi);
         printf("%d new pages saved.\n",masterinfo->published_pages-pw);
+        k2pdfopt_progress_convert(pageno, masterinfo->published_pages-pw);
         pw=masterinfo->published_pages;
         }
     bmp_free(marked);

@@ -10,4 +10,7 @@
 
 int k2pdfopt_main(int argc, const char *argv[]);
 
+void k2pdfopt_progress_read_pages(int num_pages);
+void k2pdfopt_progress_convert(int page_index, int num_output_pages);
+
 #endif  /* K2PDFOPT_API_H_ */
